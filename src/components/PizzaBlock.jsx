@@ -5,7 +5,8 @@ export default function PizzaBlock({title, price, img, size, type}) {
   const [activeType, setActiveType] = React.useState(0)
   const typesDough = ['тонкое','традиционное'];
     return(
-        <div className="pizza-block">
+        <div className="w">
+          <div className="pizza-block">
                 <img
                   className="pizza-block__image"
                   src={img}
@@ -49,5 +50,6 @@ export default function PizzaBlock({title, price, img, size, type}) {
                   </button>
                 </div>
               </div>
+        </div>
     )
 }
