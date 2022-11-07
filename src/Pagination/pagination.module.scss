@@ -1,0 +1,37 @@
+.root {
+  li {
+    display: inline-block;
+
+    a {
+      display: inline-block;
+      color: #fe5f1e;
+      text-align: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid #fe5f1e;
+      border-radius: 30px;
+      cursor: pointer;
+      line-height: 38px;
+      font-size: 16px;
+      margin-right: 12px;
+      &:hover {
+        background-color: rgba($color: #fe5f1e, $alpha: 1);
+        color: white;
+      }
+      &:active {
+        background-color: darken(#fe5f1e, 12%);
+        border: 1px solid darken(#fe5f1e, 12%);
+        transform: translateY(1px);
+        color: white;
+      }
+    }
+  }
+  :global {
+    .selected {
+      a {
+        background-color: rgba($color: #fe5f1e, $alpha: 1);
+        color: white;
+      }
+    }
+  }
+}

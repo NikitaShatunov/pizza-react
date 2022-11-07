@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function PizzaBlock({title, price, img, size, type}) {
+export default function PizzaBlock({title, price, imageUrl, size, type}) {
   const [sizes, setSizes] = React.useState(0);
   const [activeType, setActiveType] = React.useState(0)
   const typesDough = ['тонкое','традиционное'];
@@ -9,7 +9,7 @@ export default function PizzaBlock({title, price, img, size, type}) {
           <div className="pizza-block">
                 <img
                   className="pizza-block__image"
-                  src={img}
+                  src={imageUrl}
                   alt="Pizza"
                 />
                 <h4 className="pizza-block__title">{title}</h4>

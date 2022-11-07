@@ -1,6 +1,5 @@
 import React from "react";
-export default function Categories() {
-  const [cats, setCats] = React.useState(0);
+export default function Categories({value, onClickCategory}) {
   const categories = [
     'Все',
     'Мясные',
@@ -9,16 +8,14 @@ export default function Categories() {
     'Острые',
     'Закрытые',
   ]
-  const onClickCats = (i) => {
-    setCats(i)
-  }
+ 
   return (
     <div className="categories">
       <ul>
         {
           categories.map((cat, key) => <li key = {key} 
-          onClick={() => onClickCats(key)}
-          className={cats === key ? 'active' : ''}>{cat}</li>)
+          onClick={() => onClickCategory(key)}
+          className={value === key ? 'active' : ''}>{cat}</li>)
         }
       </ul>
     </div>

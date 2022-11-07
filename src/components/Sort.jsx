@@ -1,12 +1,14 @@
 import React from "react";
-export default function Sort() {
+export default function Sort({value, onClickSortType, onClickAsc, isAsc}) {
   const [isVisibleSort, setIsVisibleSort] = React.useState(false);
-  const [listActive, setListActive] = React.useState(0);
-  const list = ['популярности','цене','алфавиту']
+  const list = [{name: 'популярности', prop: 'rating'}, 
+  {name: 'цене', prop: 'price'},
+  {name: 'алфавиту', prop: 'title'}]
   return (
     <div className="sort">
       <div className="sort__label">
-        <svg
+        <div className="asc" onClick={() => onClickAsc(!isAsc)}>
+        <svg className={isAsc ? '' : 'rotate'}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -18,20 +20,21 @@ export default function Sort() {
             fill="#2C2C2C"
           />
         </svg>
+        </div>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsVisibleSort(!isVisibleSort)} >{list[listActive]}</span>
+        <span onClick={() => setIsVisibleSort(!isVisibleSort)} >{value.name}</span>
       </div>
       {
         isVisibleSort && <div className="sort__popup">
         <ul>
            {
-            list.map((arr, i) => <li key = {i}
-            className={listActive === i ? 'active' : ''}
+            list.map((obj, i) => <li key = {i}
+            className={value.prop === obj.prop ? 'active' : ''}
             onClick={() => {
-              setListActive(i)
+              onClickSortType(obj)
               setIsVisibleSort(!isVisibleSort)
             }}
-            >{arr}</li>)
+            >{obj.name}</li>)
            }
         </ul>
       </div>
