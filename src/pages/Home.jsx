@@ -11,21 +11,17 @@ import PizzaBlockSceleton from "../components/PizzaBlockSceleton";
 
 export default function Home() {
   const cats = useSelector((state) => state.filter.cats);
+  const isAsc = useSelector((state) => state.filter.asc);
   const dispatch = useDispatch();
+  const sortType =  useSelector((state) => state.filter.sort.prop);
   const { searchValue } = React.useContext(SearchContext);
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [isAsc, setIsAsc] = React.useState("true");
-  const [sortType, setSortType] = React.useState({
-    name: "популярности",
-    prop: "rating",
-  });
 
   const onClickCategory = (id) => {
     dispatch(setCats(id));
   }
 
-  // const [cats, setCats] = React.useState(0);
   const [pageId, setPageId] = React.useState(1);
 
   React.useEffect(() => {
@@ -33,7 +29,7 @@ export default function Home() {
     fetch(
       `https://636106e067d3b7a0a6bbab86.mockapi.io/pizzas?${
         cats > 0 ? `category=${cats}` : ""
-      }&sortBy=${sortType.prop}&order=${isAsc ? "asc" : "desc"}`
+      }&sortBy=${sortType}&order=${isAsc ? "asc" : "desc"}`
     )
       .then((res) => res.json())
       .then((json) => {
@@ -71,12 +67,6 @@ export default function Home() {
       <div className="content__top">
         <Categories value={cats} onClickCategory={onClickCategory} />
         <Sort
-          value={sortType}
-          onClickSortType={(i) => setSortType(i)}
-          onClickAsc={(asc) => {
-            setIsAsc(asc);
-          }}
-          isAsc={isAsc}
         />
       </div>
       <h2 className="content__title">Все пиццы</h2>

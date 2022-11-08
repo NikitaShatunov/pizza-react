@@ -1,11 +1,22 @@
 import React from "react";
-export default function Sort({ value, onClickSortType, onClickAsc, isAsc }) {
+import { useSelector, useDispatch } from "react-redux";
+import { setSort, setAsc } from '../redux/slices/filterSlice'
+
+export default function Sort() {
+  const dispatch = useDispatch();
+  const sort = useSelector(state => state.filter.sort);
+  const isAsc = useSelector(state => state.filter.asc);
+  
   const [isVisibleSort, setIsVisibleSort] = React.useState(false);
   const list = [
     { name: "популярности", prop: "rating" },
     { name: "цене", prop: "price" },
     { name: "алфавиту", prop: "title" },
   ];
+
+  const onClickAsc = (id) => {
+    dispatch(setAsc(id))
+  }
   return (
     <div className="sort">
       <div className="sort__label">
@@ -26,7 +37,7 @@ export default function Sort({ value, onClickSortType, onClickAsc, isAsc }) {
         </div>
         <b>Сортировка по:</b>
         <span onClick={() => setIsVisibleSort(!isVisibleSort)}>
-          {value.name}
+          {sort.name}
         </span>
       </div>
       {isVisibleSort && (
@@ -35,9 +46,9 @@ export default function Sort({ value, onClickSortType, onClickAsc, isAsc }) {
             {list.map((obj, i) => (
               <li
                 key={i}
-                className={value.prop === obj.prop ? "active" : ""}
+                className={sort.prop === obj.prop ? "active" : ""}
                 onClick={() => {
-                  onClickSortType(obj);
+                  dispatch(setSort(obj));
                   setIsVisibleSort(!isVisibleSort);
                 }}
               >

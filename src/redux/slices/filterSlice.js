@@ -6,7 +6,9 @@ const initialState = {
         name: "популярности",
         prop: "rating",
       },
+    asc: true,
 }
+
 
 const filterSlice = createSlice({
     name: 'filter',
@@ -14,10 +16,16 @@ const filterSlice = createSlice({
     reducers: {
         setCats(state, action) {
             state.cats = action.payload;
-        }        
+        } ,
+        setSort(state, action) {
+            state.sort = action.payload;
+        } ,      
+        setAsc(state, action) {
+            state.asc = action.payload;
+        }
     }
 })
 
-export const { setCats } = filterSlice.actions;
+export const { setCats, setSort, setAsc } = filterSlice.actions;
 
 export default filterSlice.reducer;
