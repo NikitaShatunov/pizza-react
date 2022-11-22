@@ -6,19 +6,35 @@ export default function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(state => state.filter.sort);
   const isAsc = useSelector(state => state.filter.asc);
-  
-  const [isVisibleSort, setIsVisibleSort] = React.useState(false);
+  const [isVisibleSort, setIsVisibleSort] = React.useState(false);  
+  const sortRef = React.useRef();
+
   const list = [
     { name: "популярности", prop: "rating" },
     { name: "цене", prop: "price" },
     { name: "алфавиту", prop: "title" },
   ];
 
+  React.useEffect(() => {
+    
+    const clickOutside =  event => {
+      let path = event.composedPath().includes(sortRef.current);
+      if(!path){
+        setIsVisibleSort(false);
+      }
+    }
+    document.body.addEventListener('click', clickOutside);
+
+     return () => {
+      document.body.removeEventListener('click', clickOutside);
+     }
+  },[])
   const onClickAsc = (id) => {
     dispatch(setAsc(id))
   }
+  
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <div className="asc" onClick={() => onClickAsc(!isAsc)}>
           <svg

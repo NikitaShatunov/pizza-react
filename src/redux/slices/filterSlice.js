@@ -7,6 +7,7 @@ const initialState = {
         prop: "rating",
       },
     asc: true,
+    searchValue: '',
 }
 
 
@@ -22,10 +23,18 @@ const filterSlice = createSlice({
         } ,      
         setAsc(state, action) {
             state.asc = action.payload;
-        }
+        },
+        setFilters(state, action){
+            state.sort = action.payload.sort;
+            state.cats = Number(action.payload.cats);
+            state.asc = Boolean(action.payload.asc);
+        },
+        setSearchValue(state, action) {
+            state.searchValue = action.payload;
+        },
     }
 })
 
-export const { setCats, setSort, setAsc } = filterSlice.actions;
+export const { setCats, setSort, setAsc, setFilters, setSearchValue } = filterSlice.actions;
 
 export default filterSlice.reducer;
