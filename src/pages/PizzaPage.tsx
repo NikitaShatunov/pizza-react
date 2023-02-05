@@ -1,9 +1,13 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
-export default function PizzaPage () {
-    const [pizza, setPizza] = React.useState();
+// from React we pull FC(functional component)
+const PizzaPage : React.FC = () => {
+    const [pizza, setPizza] = React.useState<{
+        title: string;
+        price: number;
+        imageUrl: string;
+    }>();
     const {id} = useParams();
     const navigate = useNavigate();
     React.useEffect(() => {
@@ -14,13 +18,14 @@ export default function PizzaPage () {
            }
            catch (erorr){
             alert("Eror")
-            navigate('/')
+            navigate('/np')
            }
         }
         fetch();
     },[]);
     if (!pizza) {
-       return <div>loading</div>
+        // нужен скелетон товара
+       return <div>loading...</div>
     }
     return(
         <div className="container">
@@ -30,3 +35,4 @@ export default function PizzaPage () {
         </div>
     )
 }
+export default PizzaPage;

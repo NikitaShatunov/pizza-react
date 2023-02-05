@@ -1,25 +1,30 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setSort, setAsc } from '../redux/slices/filterSlice'
+import { setSort, setAsc, SortPropEnum } from '../redux/slices/filterSlice'
 
 export default function Sort() {
   const dispatch = useDispatch();
-  const sort = useSelector(state => state.filter.sort);
-  const isAsc = useSelector(state => state.filter.asc);
+  const sort = useSelector((state: any) => state.filter.sort);
+  const isAsc = useSelector((state: any) => state.filter.asc);
   const [isVisibleSort, setIsVisibleSort] = React.useState(false);  
-  const sortRef = React.useRef();
+  const sortRef = React.useRef<HTMLDivElement>(null);
+  
+  type ListType = {
+    name: string;
+    prop: SortPropEnum;
+  };
 
-  const list = [
-    { name: "популярности", prop: "rating" },
-    { name: "цене", prop: "price" },
-    { name: "алфавиту", prop: "title" },
+  
+  const list: ListType[] = [
+    { name: "популярности", prop: SortPropEnum.RATING },
+    { name: "цене", prop: SortPropEnum.PRICE },
+    { name: "алфавиту", prop: SortPropEnum.TITLE },
   ];
 
   React.useEffect(() => {
     
-    const clickOutside =  event => {
-      let path = event.composedPath().includes(sortRef.current);
-      if(!path){
+    const clickOutside = (event: MouseEvent & {composedPath(): EventTarget[]}) => {
+      if(sortRef.current && !event.composedPath().includes(sortRef.current)){
         setIsVisibleSort(false);
       }
     }
@@ -29,7 +34,7 @@ export default function Sort() {
       document.body.removeEventListener('click', clickOutside);
      }
   },[])
-  const onClickAsc = (id) => {
+  const onClickAsc = (id: boolean) => {
     dispatch(setAsc(id))
   }
   

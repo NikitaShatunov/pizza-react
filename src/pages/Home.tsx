@@ -1,26 +1,27 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
 
-import { setCats, setFilters } from "../redux/slices/filterSlice";
+import { FilterState, setCats, setFilters } from "../redux/slices/filterSlice";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import PizzaBlockSceleton from "../components/PizzaBlockSceleton";
-import { fetchItems } from "../redux/slices/pizzasFetchSlice";
+import { fetchItems, SearchParams } from "../redux/slices/pizzasFetchSlice";
 import NotFoundBlock from "../components/NotFoundBlock";
+import { useAppDispatch } from "../redux/store";
 
-export default function Home() {
+const Home: React.FC = () => {
   const navigate = useNavigate();
-  const cats = useSelector((state) => state.filter.cats);
-  const isAsc = useSelector((state) => state.filter.asc);
-  const dispatch = useDispatch();
-  const sortType = useSelector((state) => state.filter.sort.prop);
-  const{status, items }= useSelector((state) => state.pizzas);
-  const { searchValue } = useSelector(state => state.filter)
+  const cats = useSelector((state: any) => state.filter.cats);
+  const isAsc = useSelector((state: any) => state.filter.asc);
+  const dispatch = useAppDispatch();
+  const sortType = useSelector((state: any) => {
+    return state.filter.sort
+  });
+  const{status, items }= useSelector((state: any) => state.pizzas);
+  const { searchValue } = useSelector((state: any) => state.filter)
 
   const params = {sortType, isAsc, cats}
 
@@ -35,7 +36,7 @@ export default function Home() {
 
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = qs.parse(window.location.search.substring(1))
       let name = "";
       switch (params.prop) {
         case "rating":
@@ -50,25 +51,29 @@ export default function Home() {
         default:
           break;
       }
-      params.sort = {
+      params.sortType = {
         name: name,
         prop: params.prop,
       };
       delete params.prop;
       dispatch(
         setFilters({
-          ...params,
+          cats: cats,
+          sort: sortType,
+          asc: isAsc,
+          searchValue: searchValue,
         })
       );
       isSearch.current = true;
     }
   }, []);
 
-  const onClickCategory = (id) => {
+  const onClickCategory = (id: number) => {
     dispatch(setCats(id));
   };
   const fetchPizzas = async () => {
-    dispatch(fetchItems(params))
+    dispatch(
+       fetchItems(params))
   };
 
   React.useEffect(() => {
@@ -82,7 +87,7 @@ export default function Home() {
   React.useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
-        prop: sortType,
+        prop: sortType.prop,
         cats,
         asc: isAsc,
       });
@@ -92,22 +97,24 @@ export default function Home() {
   }, [cats, sortType, isAsc]);
 
   const pizzas = items
-    .filter((obj) => {
+    .filter((obj: any) => {
       if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
         return true;
       } else {
         return false;
       }
     })
-    .map((obj) => (
-      <Link key={obj.id} to={`pizza/${obj.id}`}><PizzaBlock
+    .map((obj: any) => (
+      <PizzaBlock
       id={obj.id}
       imageUrl={obj.imageUrl}
       title={obj.title}
       price={obj.price}
       size={obj.sizes}
       type={obj.types}
-    /></Link>
+      count={obj.count}
+      key={obj.id}
+    />
     ));
 
   const skeletons = [...new Array(6)].map((_, i) => (
@@ -127,3 +134,4 @@ export default function Home() {
     </div>
   );
 }
+export default Home;

@@ -1,33 +1,51 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-import { addItems } from "../redux/slices/cartSlice";
+import { addItems, CartItemType } from "../redux/slices/cartSlice";
 const typesDough = ["тонкое", "традиционное"];
 
-export default function PizzaBlock({ id, title, price, imageUrl, size, type }) {
+type PizzaBlockProps = {
+  id: string;
+  title: string;
+  price: number;
+  count: number;
+  imageUrl: string;
+  type: number[];
+  size: number[];
+}
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, title, price, imageUrl, size, type }) => {
   const [sizes, setSizes] = React.useState(0);
   const [activeType, setActiveType] = React.useState(0);
   const dispatch = useDispatch();
-  const cartItem = useSelector((state) =>
-    state.cart.items.find((obj) => obj.id === id)
+  const cartItem = useSelector((state: any) =>
+    state.cart.items.find((obj: any) => obj.id === id)
   );
   const addedCount = cartItem ? cartItem.count : 0;
+
+  const [count, setCount] = React.useState(0);
+
   const onClickAdd = () => {
-    const item = {
+    const item: CartItemType = {
       id,
       title,
       price,
       imageUrl,
       type: typesDough[activeType],
       size: sizes,
+      count: 0,
     };
     dispatch(addItems(item));
+    setCount(count + 1)
   };
   return (
     <div className="w">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+      <Link key={id} to={`pizza/${id}`}>
+      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
         <h4 className="pizza-block__title">{title}</h4>
+        </Link>
         <div className="pizza-block__selector">
           <ul>
             {type.map((type) => (
@@ -72,10 +90,11 @@ export default function PizzaBlock({ id, title, price, imageUrl, size, type }) {
               />
             </svg>
             <span>Добавить</span>
-            {addedCount > 0 && <i>{addedCount}</i>}
+            {count > 0 && <i>{count}</i>}
           </button>
         </div>
       </div>
     </div>
   );
 }
+export default PizzaBlock;
